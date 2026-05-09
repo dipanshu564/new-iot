@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIStec IoT Application 2026 - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-slate-950 text-slate-100" id="dashboard-app">
+  <div class="min-h-screen">
+    <nav class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 px-5 py-5 bg-slate-900/90 border-b border-slate-800 shadow-sm backdrop-blur">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold text-sky-300">SIStec IoT Application 2026</h1>
+        <p class="text-slate-400 text-sm mt-1">Welcome back, <span id="nav-username">User</span></p>
+      </div>
+      <div class="flex flex-wrap gap-3 items-center">
+        <button id="dark-toggle" class="rounded-2xl bg-slate-800 px-4 py-2 text-slate-100 hover:bg-slate-700 transition">Dark Mode</button>
+        <button id="logout-btn" class="rounded-2xl bg-sky-500 px-4 py-2 text-white hover:bg-sky-400 transition">Logout</button>
+      </div>
+    </nav>
+
+    <div class="px-5 py-6 space-y-6">
+      <div class="grid gap-4 xl:grid-cols-[2fr_1fr]">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="card card-hover p-5 bg-slate-900 border border-slate-700">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-slate-400">Live Temperature</p>
+                <h2 id="temp-value" class="text-5xl font-bold text-sky-300 mt-3">--°C</h2>
+              </div>
+              <span id="status-badge" class="badge bg-emerald-500 text-slate-950">Normal</span>
+            </div>
+            <p class="text-slate-500 text-sm mt-4" id="last-updated">Last updated: --</p>
+          </div>
+          <div class="card card-hover p-5 bg-slate-900 border border-slate-700">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-slate-400">Live Humidity</p>
+                <h2 id="hum-value" class="text-5xl font-bold text-cyan-300 mt-3">--%</h2>
+              </div>
+              <div class="text-right">
+                <p class="text-sm text-slate-400">Records</p>
+                <p id="total-records" class="text-2xl font-semibold text-slate-100 mt-2">0</p>
+              </div>
+            </div>
+            <div class="mt-5 grid grid-cols-2 gap-3">
+              <div class="bg-slate-950/60 rounded-2xl p-3">
+                <p class="text-xs text-slate-400">Avg Temp</p>
+                <p id="avg-temp" class="text-lg font-semibold text-slate-100 mt-2">0°C</p>
+              </div>
+              <div class="bg-slate-950/60 rounded-2xl p-3">
+                <p class="text-xs text-slate-400">Avg Humidity</p>
+                <p id="avg-hum" class="text-lg font-semibold text-slate-100 mt-2">0%</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card card-hover bg-slate-900 border border-slate-700 p-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-slate-400">Clock widget</p>
+              <h2 id="clock-widget" class="text-4xl font-bold text-sky-300 mt-3">--:--:--</h2>
+            </div>
+            <button id="fake-sensor-btn" class="rounded-2xl bg-sky-500 px-4 py-3 text-white hover:bg-sky-400 transition">Generate Sensor</button>
+          </div>
+          <p class="text-slate-500 text-sm mt-4">Use this to add realistic random sensor values and test the live dashboard.</p>
+        </div>
+      </div>
+
+      <section class="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+        <div class="card card-hover bg-slate-900 border border-slate-700 p-5">
+          <h2 class="text-xl font-semibold text-slate-100">LCD Message Sender</h2>
+          <p class="text-slate-400 text-sm mt-2">Write a short message for the LCD display. Max 16 characters.</p>
+          <textarea id="lcd-textarea" maxlength="16" rows="4" class="mt-4 w-full rounded-3xl border border-slate-700 bg-slate-950 px-4 py-4 text-slate-100 focus:outline-none focus:border-sky-400"></textarea>
+          <div class="flex flex-wrap items-center justify-between gap-3 mt-3 text-slate-300">
+            <p id="lcd-char-count">0 / 16</p>
+            <div class="flex gap-3">
+              <button id="lcd-save-btn" class="rounded-2xl bg-emerald-500 px-4 py-2 text-slate-950 hover:bg-emerald-400 transition">Save Message</button>
+              <button id="lcd-download-btn" class="rounded-2xl bg-slate-800 px-4 py-2 text-slate-100 hover:bg-slate-700 transition">Download Text</button>
+            </div>
+          </div>
+          <div class="mt-4 rounded-3xl bg-slate-950/80 p-4 text-slate-100">
+            <p class="text-sm text-slate-400">Saved LCD message:</p>
+            <p id="lcd-current-message" class="mt-2 text-lg font-medium">No message yet.</p>
+          </div>
+        </div>
+
+        <div class="card card-hover bg-slate-900 border border-slate-700 p-5">
+          <h2 class="text-xl font-semibold text-slate-100">Temperature & Humidity Chart</h2>
+          <canvas id="sensor-chart" class="mt-4 w-full h-80"></canvas>
+        </div>
+      </section>
+
+      <section class="card card-hover bg-slate-900 border border-slate-700 p-5">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h2 class="text-xl font-semibold text-slate-100">Sensor Records</h2>
+            <p class="text-slate-400 text-sm mt-1">Manage saved sensor data with search, paging, and export.</p>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <input id="record-search" type="text" placeholder="Search records" class="rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 focus:outline-none focus:border-sky-400" />
+            <button id="csv-export-btn" class="rounded-2xl bg-sky-500 px-4 py-3 text-white hover:bg-sky-400 transition">Export CSV</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto mt-5">
+          <table class="w-full text-left border-separate border-spacing-y-3">
+            <thead>
+              <tr class="text-slate-400 text-sm uppercase tracking-wide">
+                <th class="px-4 py-3">#</th>
+                <th class="px-4 py-3">Temperature</th>
+                <th class="px-4 py-3">Humidity</th>
+                <th class="px-4 py-3">Time</th>
+                <th class="px-4 py-3">Date</th>
+                <th class="px-4 py-3">Action</th>
+              </tr>
+            </thead>
+            <tbody id="record-table-body" class="text-slate-100"></tbody>
+          </table>
+        </div>
+        <p id="record-empty" class="mt-4 text-slate-400">No Sensor Records Available</p>
+        <div id="record-pagination" class="mt-5 flex flex-wrap gap-2"></div>
+      </section>
+    </div>
+  </div>
+
+  <div id="loader" class="spinner hidden"></div>
+  <div id="toast" class="toast hidden"></div>
+  <script src="script.js"></script>
+</body>
+</html>

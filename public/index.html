@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIStec IoT Application 2026 - Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-slate-950 text-slate-100">
+  <div class="min-h-screen flex items-center justify-center px-4 py-10">
+    <div class="max-w-md w-full bg-slate-900/90 backdrop-blur rounded-3xl shadow-2xl border border-slate-700 p-8">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-sky-400">SIStec IoT Application 2026</h1>
+        <p class="mt-2 text-slate-400">Login to access the IoT dashboard.</p>
+      </div>
+      <form id="login-form" class="space-y-5">
+        <div>
+          <label class="block text-sm text-slate-300">Email</label>
+          <input name="email" type="email" required class="w-full mt-2 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 focus:outline-none focus:border-sky-400" />
+        </div>
+        <div>
+          <label class="block text-sm text-slate-300">Password</label>
+          <input name="password" type="password" required class="w-full mt-2 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 focus:outline-none focus:border-sky-400" />
+        </div>
+        <button type="submit" class="w-full rounded-2xl bg-sky-500 px-5 py-3 text-white font-semibold hover:bg-sky-400 transition">Login</button>
+      </form>
+      <p class="mt-6 text-sm text-slate-400 text-center">Need an account? <a href="register.html" class="text-sky-400 hover:text-sky-300">Register here</a></p>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="script.js"></script>
+</body>
+</html>
